@@ -4,18 +4,12 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-// import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CommentIcon from "@mui/icons-material/Comment";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Button } from "@mui/material";
-// import video from "../testdata/TestVideo.mp4";
 
 interface Props {
   caption: string;
@@ -37,7 +31,6 @@ const Post: React.FC<Props> = (props) => {
         src={props.fileUrl}
         controls={props.fileType === "video/mp4" || undefined}
         component={props.fileType === "video/mp4" ? "video" : "img"}
-        // alt={{props.fileType !== "video/mp4" ? "video" : null}}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">

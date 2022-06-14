@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,10 +7,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import { DropzoneArea } from "react-mui-dropzone";
 import {
   addDoc,
   collection,
@@ -20,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, getDownloadURL, uploadString } from "firebase/storage";
+import { AuthContext } from "../context/AuthContext";
 
 interface Props {
   open: boolean;
@@ -30,6 +27,8 @@ const PostModal: React.FC<Props> = (props) => {
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState<any>(null);
   const [chosenFile, setChosenFile] = useState<any>(null);
+
+  const currentUser = useContext(AuthContext).currentUser;
 
   const handleCaptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -54,12 +53,8 @@ const PostModal: React.FC<Props> = (props) => {
   };
 
   const handleSubmit = async () => {
-    //create poat in firebase
-    //get post id
-    //upload image/video
-    // get download url for image/video
     const documentRef = await addDoc(collection(db, "posts"), {
-      username: "Batman",
+      username: currentUser.displayName,
       caption,
       fileType: chosenFile.type,
       timestamp: serverTimestamp(),
@@ -83,8 +78,6 @@ const PostModal: React.FC<Props> = (props) => {
       <DialogContent>
         <DialogContentText>Caption</DialogContentText>
         <FormControl className="space-y-4">
-          {/* <InputLabel htmlFor="my-input">Email address</InputLabel> */}
-          {/* <Input id="my-input" aria-describedby="my-helper-text"/> */}
           <TextField
             onChange={(event) => handleCaptionChange(event)}
             autoFocus
@@ -103,23 +96,8 @@ const PostModal: React.FC<Props> = (props) => {
             placeholder=""
             type="file"
             onChange={(event) => handleFileChange(event)}
-            // accept={("image/jpeg", "image/png", "image/bmp", "video/mp4")}
             accept="image/*, video/mp4"
           />
-          {/* <DropzoneArea
-            dropzoneText={"Drop a file or clck"}
-            filesLimit={1}
-            maxFileSize={5000000}
-            useChipsForPreview
-            // onChange={(files, event) => handleChange(files, event)}
-            onDrop={(files, event) => handleChange(files, event)}
-            acceptedFiles={[
-              "image/jpeg",
-              "image/png",
-              "image/bmp",
-              "video/mp4",
-            ]}
-          /> */}
         </FormControl>
       </DialogContent>
       <DialogActions>

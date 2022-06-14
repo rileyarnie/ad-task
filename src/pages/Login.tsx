@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +26,8 @@ const Login = () => {
     isError: false,
     message: "",
   });
+
+  const { dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -58,10 +61,10 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentail) => {
         const user = userCredentail.user;
+        dispatch({ type: "LOGIN", payload: user });
         navigate("/");
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         setAuthError({ isError: true, message: errorMessage });
       });
