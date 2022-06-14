@@ -17,26 +17,31 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Button } from "@mui/material";
 // import video from "../testdata/TestVideo.mp4";
 
-const Post = () => {
-  const videoAttrs = true;
-  const imageAttrs = {};
+interface Props {
+  caption: string;
+  fileType: string;
+  fileUrl: string;
+  timestamp: number;
+  username: string;
+}
+
+const Post: React.FC<Props> = (props) => {
   return (
     <Card sx={{ maxWidth: 345 }} className="mx-auto">
       <CardHeader
         avatar={<Avatar>BW</Avatar>}
-        title={new Date().toLocaleString()}
+        title={new Date(props.timestamp).toLocaleString()}
       />
       <CardMedia
         height="195"
-        src={"../testdata/TestVideo.mp4"}
-        controls={videoAttrs || undefined}
-        component={videoAttrs ? "video" : "img"}
+        src={props.fileUrl}
+        controls={props.fileType === "video/mp4" || undefined}
+        component={props.fileType === "video/mp4" ? "video" : "img"}
+        // alt={{props.fileType !== "video/mp4" ? "video" : null}}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {props.caption}
         </Typography>
       </CardContent>
       <CardActions className="flex justify-between">
