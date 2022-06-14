@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext, AuthContextProvider } from "../context/AuthContext";
 import { doc, setDoc } from "firebase/firestore";
 
 const Login = () => {
@@ -109,7 +109,7 @@ const Login = () => {
       // });
       await updateProfile(newUser.user, { displayName });
       return navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error.message;
 
       return setAuthError({ isError: true, message: errorMessage });

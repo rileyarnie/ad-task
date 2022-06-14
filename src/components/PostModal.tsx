@@ -31,7 +31,6 @@ const PostModal: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
 
   const currentUser = useContext(AuthContext).currentUser;
-  console.log("currentUser.displayName", currentUser);
 
   const handleCaptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
