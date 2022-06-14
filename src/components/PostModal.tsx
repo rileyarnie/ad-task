@@ -17,6 +17,7 @@ import {
 import { db, storage } from "../config/firebase";
 import { ref, getDownloadURL, uploadString } from "firebase/storage";
 import { AuthContext } from "../context/AuthContext";
+import LinearProgress from "@mui/material/LinearProgress";
 
 interface Props {
   open: boolean;
@@ -27,8 +28,10 @@ const PostModal: React.FC<Props> = (props) => {
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState<any>(null);
   const [chosenFile, setChosenFile] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const currentUser = useContext(AuthContext).currentUser;
+  console.log("currentUser.displayName", currentUser);
 
   const handleCaptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -53,6 +56,7 @@ const PostModal: React.FC<Props> = (props) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const documentRef = await addDoc(collection(db, "posts"), {
       username: currentUser.displayName,
       caption,
@@ -68,12 +72,17 @@ const PostModal: React.FC<Props> = (props) => {
         await updateDoc(doc(db, "posts", documentRef.id), {
           fileUrl: downloadURL,
         });
+        setLoading(false);
+        props.handleClose();
       })
-      .catch((err) => console.log({ err }));
+      .catch((err) => {
+        return setLoading(false);
+      });
   };
 
   return (
     <Dialog open={props.open} onClose={props.handleClose}>
+      {loading && <LinearProgress />}
       <DialogTitle>Create New Post</DialogTitle>
       <DialogContent>
         <DialogContentText>Caption</DialogContentText>
@@ -101,8 +110,12 @@ const PostModal: React.FC<Props> = (props) => {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button disabled={loading} onClick={props.handleClose}>
+          Cancel
+        </Button>
+        <Button disabled={loading} onClick={handleSubmit}>
+          Submit
+        </Button>
       </DialogActions>
     </Dialog>
   );

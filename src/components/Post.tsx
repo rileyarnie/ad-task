@@ -23,8 +23,9 @@ const Post: React.FC<Props> = (props) => {
   return (
     <Card sx={{ maxWidth: 345 }} className="mx-auto">
       <CardHeader
-        avatar={<Avatar>BW</Avatar>}
-        title={new Date(props.timestamp).toLocaleString()}
+        avatar={<Avatar src={props.username} alt={props.username} />}
+        title={`Posted by ${props.username}`}
+        subheader={new Date(props.timestamp).toLocaleString()}
       />
       <CardMedia
         height="195"
